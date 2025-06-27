@@ -51,25 +51,42 @@ def giris_yap():
         return redirect("/form")
     return "Hatalı giriş. <a href='/giris'>Geri dön</a>"
 
-@app.route('/form')
+@app.route('/form', methods=['GET', 'POST'])
 def form_sayfasi():
     if "kullanici" not in session:
         return redirect("/giris")
-    return """
-    <h2>Müşteri Kayıt</h2>
-    <form method="POST" action="/kaydet" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Ad" required><br>
-        <input type="text" name="surname" placeholder="Soyad" required><br>
-        Kimlik Ön: <input type="file" name="kimlik_on" required><br>
-        Kimlik Arka: <input type="file" name="kimlik_arka" required><br>
-        <button type="submit">Gönder</button>
-    </form>
-    """
 
-@app.route('/form', methods=['GET'])
-def form_sayfasi():
-    if "kullanici" not in session:
-        return redirect("/giris")
+    if request.method == "POST":
+        name = request.form["name"]
+        surname = request.form["surname"]
+        kimlik_on = request.files["kimlik_on"]
+        kimlik_arka = request.files["kimlik_arka"]
+
+        zaman = datetime.now().strftime("%Y%m%d_%H%M%S")
+        kullanici_id = session["kullanici"]
+        giris_yapan = KULLANICI_ISIMLERI.get(kullanici_id, {"ad": kullanici_id, "soyad": ""})
+
+        on_path = os.path.join(UPLOAD_FOLDER, secure_filename(f"{name}_{surname}_on_{zaman}.jpg"))
+        arka_path = os.path.join(UPLOAD_FOLDER, secure_filename(f"{name}_{surname}_arka_{zaman}.jpg"))
+
+        kimlik_on.save(on_path)
+        kimlik_arka.save(arka_path)
+
+        veri = {
+            "girisYapan": giris_yapan,
+            "girilen": {
+                "ad": name,
+                "soyad": surname,
+                "kimlik_on": on_path,
+                "kimlik_arka": arka_path
+            },
+            "zaman": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+        with open(DATA_FILE, "a", encoding="utf-8") as f:
+            f.write(json.dumps(veri, ensure_ascii=False) + "\n")
+
+        return redirect("/form")
 
     return render_template_string("""
     <!DOCTYPE html>
@@ -86,11 +103,11 @@ def form_sayfasi():
             <form method="POST" action="/form" enctype="multipart/form-data" class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Ad</label>
-                    <input type="text" name="ad" class="form-control" required>
+                    <input type="text" name="name" class="form-control" required>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Soyad</label>
-                    <input type="text" name="soyad" class="form-control" required>
+                    <input type="text" name="surname" class="form-control" required>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Kimlik Ön Yüz</label>
