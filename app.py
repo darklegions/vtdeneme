@@ -63,8 +63,8 @@ def giris_formu():
 
 @app.route('/giris', methods=['POST'])
 def giris_yap():
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.form.get("kullanici_adi")
+    password = request.form.get("sifre")
     if username in KULLANICILAR and KULLANICILAR[username] == password:
         session["kullanici"] = username
         return redirect("/form")
