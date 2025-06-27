@@ -56,7 +56,7 @@ def form_sayfasi():
     if "kullanici" not in session:
         return redirect("/giris")
     return """
-    <h2>Veri Girişi</h2>
+    <h2>Müşteri Kayıt</h2>
     <form method="POST" action="/kaydet" enctype="multipart/form-data">
         <input type="text" name="name" placeholder="Ad" required><br>
         <input type="text" name="surname" placeholder="Soyad" required><br>
@@ -112,8 +112,8 @@ def admin_panel():
 
     html = """
     <!DOCTYPE html>
-    <html><head><meta charset='utf-8'><title>Admin Paneli</title></head><body>
-    <h2>Admin Paneli</h2>
+    <html><head><meta charset='utf-8'><title>Müşteri Paneli</title></head><body>
+    <h2>Müşteri Paneli</h2>
     <a href='/indir_excel'><button>Excel Olarak İndir</button></a>
     <table border='1' cellpadding='5'><tr>
         <th>Giriş Yapan</th><th>Girilen Ad</th><th>Girilen Soyad</th><th>Zaman</th>
@@ -157,7 +157,7 @@ def indir_excel():
     try:
         wb = Workbook()
         ws = wb.active
-        ws.append(["Giriş Yapan", "Girilen Ad", "Girilen Soyad", "Zaman"])
+        ws.append(["Yetkili", "Ad", "Soyad", "Zaman"])
 
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             for s in f:
