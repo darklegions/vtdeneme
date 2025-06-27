@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <title>Bilgi Girişi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <h2>Ad ve Soyad Girişi</h2>
-  <form id="form">
-    <input type="text" name="name" placeholder="Adınız" required>
-    <input type="text" name="surname" placeholder="Soyadınız" required>
-    <button type="submit">Gönder</button>
-  </form>
+<body class="bg-light">
 
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="mb-4 text-center">Ad ve Soyad Girişi</h4>
+          <form id="form">
+            <div class="mb-3">
+              <label for="name" class="form-label">Ad</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Adınızı girin" required>
+            </div>
+            <div class="mb-3">
+              <label for="surname" class="form-label">Soyad</label>
+              <input type="text" class="form-control" id="surname" name="surname" placeholder="Soyadınızı girin" required>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Gönder</button>
+            </div>
+          </form>
+          <div id="sonuc" class="mt-3 text-center fw-semibold"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
 <script>
   document.getElementById("form").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -25,20 +46,22 @@
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/kaydet", {
+      const response = await fetch("/kaydet", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
       const result = await response.json();
-      alert(result.durum === "başarılı" ? "Kayıt başarılı!" : "Hata: " + result.mesaj);
+      document.getElementById("sonuc").innerText =
+        result.durum === "başarılı" ? "✅ Kayıt başarılı!" : "❌ Hata: " + result.mesaj;
     } catch (err) {
-      alert("Sunucuya ulaşılamadı: " + err);
+      document.getElementById("sonuc").innerText = "⚠️ Sunucuya ulaşılamadı!";
     }
   });
 </script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
