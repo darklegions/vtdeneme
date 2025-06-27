@@ -112,29 +112,72 @@ def admin_panel():
 
     html = """
     <!DOCTYPE html>
-    <html><head><meta charset='utf-8'><title>Müşteri Paneli</title></head><body>
+    <html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Müşteri Paneli</title>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    </head>
+    <body>
     <h2>Müşteri Paneli</h2>
     <a href='/indir_excel'><button>Excel Olarak İndir</button></a>
-    <table border='1' cellpadding='5'><tr>
-        <th>Giriş Yapan</th><th>Girilen Ad</th><th>Girilen Soyad</th><th>Zaman</th>
-        <th>Kimlik Ön</th><th>Kimlik Arka</th><th>Sil</th></tr>
-    {% for v in veriler %}
-<tr>
-    <td>{{ v['girisYapan']['ad'] }} {{ v['girisYapan']['soyad'] }}</td>
-    <td>{{ v['girilen']['ad'] }}</td>
-    <td>{{ v['girilen']['soyad'] }}</td>
-    <td>{{ v['zaman'] }}</td>
-    <td><a href='/{{ v["girilen"]["kimlik_on"] }}' target='_blank'>Gör</a></td>
-    <td><a href='/{{ v["girilen"]["kimlik_arka"] }}' target='_blank'>Gör</a></td>
-    <td>
-        <form method='POST' action='/veri_sil/{{ loop.index0 }}'>
-            <button>Sil</button>
-        </form>
-    </td>
-</tr>
-{% endfor %}
+    <br><br>
+    <table id="veriTablosu" class="display" border='1' cellpadding='5'>
+        <thead>
+        <tr>
+            <th>Giriş Yapan</th>
+            <th>Girilen Ad</th>
+            <th>Girilen Soyad</th>
+            <th>Zaman</th>
+            <th>Kimlik Ön</th>
+            <th>Kimlik Arka</th>
+            <th>Sil</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for v in veriler %}
+        <tr>
+            <td>{{ v['girisYapan']['ad'] }} {{ v['girisYapan']['soyad'] }}</td>
+            <td>{{ v['girilen']['ad'] }}</td>
+            <td>{{ v['girilen']['soyad'] }}</td>
+            <td>{{ v['zaman'] }}</td>
+            <td><a href='/{{ v["girilen"]["kimlik_on"] }}' target='_blank'>Gör</a></td>
+            <td><a href='/{{ v["girilen"]["kimlik_arka"] }}' target='_blank'>Gör</a></td>
+            <td>
+                <form method='POST' action='/veri_sil/{{ loop.index0 }}'>
+                    <button>Sil</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
     </table>
-    </body></html>
+
+    <script>
+    $(document).ready(function() {
+        $('#veriTablosu').DataTable({
+            "pageLength": 10,
+            "language": {
+                "search": "Ara:",
+                "lengthMenu": "Her sayfada _MENU_ kayıt göster",
+                "zeroRecords": "Eşleşen kayıt bulunamadı",
+                "info": "_TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                "infoEmpty": "Kayıt yok",
+                "paginate": {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "Sonraki",
+                    "previous": "Önceki"
+                }
+            }
+        });
+    });
+    </script>
+
+    </body>
+    </html>
     """
     return render_template_string(html, veriler=veriler)
 
