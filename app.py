@@ -14,7 +14,6 @@ UPLOAD_FOLDER = "uploads"
 DATA_FILE = "veriler.json"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Kullanıcı bilgileri
 KULLANICILAR = {
     "emir": "1234",
     "arob": "1234",
@@ -34,32 +33,32 @@ def anasayfa():
 @app.route('/giris', methods=['GET'])
 def giris_formu():
     return """
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <title>Giriş Yap</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
-  <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
-    <h3 class="text-center mb-4">Giriş Yap</h3>
-    <form method="POST" action="/giris">
-      <div class="mb-3">
-        <label for="kullanici_adi" class="form-label">Kullanıcı Adı</label>
-        <input type="text" name="kullanici_adi" id="kullanici_adi" class="form-control" required>
+    <!DOCTYPE html>
+    <html lang="tr">
+    <head>
+      <meta charset="UTF-8">
+      <title>Giriş Yap</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light d-flex align-items-center justify-content-center vh-100">
+      <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+        <h3 class="text-center mb-4">Giriş Yap</h3>
+        <form method="POST" action="/giris">
+          <div class="mb-3">
+            <label for="kullanici_adi" class="form-label">Kullanıcı Adı</label>
+            <input type="text" name="kullanici_adi" id="kullanici_adi" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="sifre" class="form-label">Şifre</label>
+            <input type="password" name="sifre" id="sifre" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Giriş</button>
+        </form>
       </div>
-      <div class="mb-3">
-        <label for="sifre" class="form-label">Şifre</label>
-        <input type="password" name="sifre" id="sifre" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Giriş</button>
-    </form>
-  </div>
-</body>
-</html>
-"""
+    </body>
+    </html>
+    """
 
 @app.route('/giris', methods=['POST'])
 def giris_yap():
