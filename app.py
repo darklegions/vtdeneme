@@ -66,6 +66,50 @@ def form_sayfasi():
     </form>
     """
 
+@app.route('/form', methods=['GET'])
+def form_sayfasi():
+    if "kullanici" not in session:
+        return redirect("/giris")
+
+    return render_template_string("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Yeni Kayıt</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light">
+        <div class="container mt-4">
+            <h4 class="mb-3">Yeni Kayıt Formu</h4>
+            <form method="POST" action="/form" enctype="multipart/form-data" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Ad</label>
+                    <input type="text" name="ad" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Soyad</label>
+                    <input type="text" name="soyad" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Kimlik Ön Yüz</label>
+                    <input type="file" name="kimlik_on" accept="image/*" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Kimlik Arka Yüz</label>
+                    <input type="file" name="kimlik_arka" accept="image/*" class="form-control" required>
+                </div>
+                <div class="col-12 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                    <a href="/veriler" class="btn btn-secondary">Kayıtları Gör</a>
+                </div>
+            </form>
+        </div>
+    </body>
+    </html>
+    """)
+
 @app.route('/kaydet', methods=['POST'])
 def kaydet():
     if "kullanici" not in session:
